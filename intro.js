@@ -79,14 +79,15 @@
     // Dans la zone intro
     showVideo();
 
-    // ---- Fade scroll-driven : commence à 55% du spacer ----
-    // La vidéo joue jusqu'à ce que le hero soit en haut (fraction = scrollY / spacerH)
-    var fadeStart = spacerH * 0.55;
-    if (scrollY >= fadeStart) {
-      var fadeProgress = (scrollY - fadeStart) / (spacerH - fadeStart);
-      video.style.opacity    = String(Math.max(0, 1 - fadeProgress));
-      if (gradient) gradient.style.opacity = String(Math.min(1, fadeProgress * 1.4));
-      var uiOpacity = String(Math.max(0, 1 - fadeProgress * 4));
+    // ---- Fade scroll-driven ----
+    // fadeStart = quand le hero entre par le bas du viewport (scrollY = scrollRange)
+    // fadeEnd   = quand le hero est en haut du viewport (scrollY = spacerH)
+    // Les deux sont parfaitement synchronisés → zéro zone noire
+    if (scrollY >= scrollRange) {
+      var fadeProgress = (scrollY - scrollRange) / window.innerHeight; // 0 → 1
+      video.style.opacity = String(Math.max(0, 1 - fadeProgress));
+      if (gradient) gradient.style.opacity = String(Math.min(1, fadeProgress));
+      var uiOpacity = String(Math.max(0, 1 - fadeProgress * 5));
       uiEls.forEach(function (el) { el.style.opacity = uiOpacity; });
     } else {
       video.style.opacity = '1';
@@ -96,8 +97,9 @@
 
     if (!duration) return;
 
-    // Mapping sur spacerH complet → pas de dead zone, vidéo joue jusqu'au bout
-    var fraction = Math.min(1, Math.max(0, scrollY / spacerH));
+    // Cap à 0.88 : évite les dernières frames noires de la vidéo
+    // Mapping sur spacerH complet → pas de dead zone
+    var fraction = Math.min(0.88, Math.max(0, scrollY / spacerH));
     targetT = fraction * duration;
 
     if (!lerpRaf) lerpRaf = requestAnimationFrame(lerpLoop);
