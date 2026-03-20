@@ -1184,12 +1184,13 @@ html { -webkit-overflow-scrolling: touch; }
   will-change: opacity; /* PDF §6 — GPU acceleration */
 }
 
-/* Gradient de transition vidéo → hero */
+/* Transition vidéo → hero : glow + fondu qui préfigure le design */
 #vi-gradient {
   position: fixed;
-  bottom: 0; left: 0; right: 0;
-  height: 45vh;
-  background: linear-gradient(to top, #0a0a0a 0%, #0a0a0a 15%, transparent 100%);
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 120%, rgba(204,255,0,0.09) 0%, transparent 65%),
+    linear-gradient(to top, #0a0a0a 0%, #0a0a0a 18%, rgba(10,10,10,0.55) 55%, transparent 100%);
   z-index: 1;
   pointer-events: none;
   will-change: opacity;

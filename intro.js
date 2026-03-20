@@ -51,14 +51,14 @@
   // Masque complètement la vidéo (display:none retire du stacking context)
   function hideVideo() {
     video.style.display = 'none';
-    if (loader)    loader.style.display = 'none';
-    if (gradient)  gradient.style.display = 'none';
+    if (loader)   loader.style.display = 'none';
+    if (gradient) { gradient.style.display = 'none'; gradient.style.opacity = '0'; }
     uiEls.forEach(function (el) { el.style.display = 'none'; });
   }
 
   function showVideo() {
     video.style.display = '';
-    if (gradient) gradient.style.display = '';
+    if (gradient) { gradient.style.display = ''; gradient.style.opacity = '0'; }
     uiEls.forEach(function (el) { el.style.display = ''; });
   }
 
@@ -79,25 +79,25 @@
     // Dans la zone intro
     showVideo();
 
-    // ---- Fade out scroll-driven pendant la remontée du hero ----
-    // fadeStart = quand le hero entre par le bas du viewport (scrollY = 200vh)
-    // À scrollY = 300vh (spacerH) : hero en haut, vidéo opacity 0 → display:none
-    var fadeStart = scrollRange; // = spacerH - innerHeight
+    // ---- Fade scroll-driven : commence à 55% du spacer ----
+    // La vidéo joue jusqu'à ce que le hero soit en haut (fraction = scrollY / spacerH)
+    var fadeStart = spacerH * 0.55;
     if (scrollY >= fadeStart) {
-      var fadeProgress = (scrollY - fadeStart) / window.innerHeight;
-      video.style.opacity = String(Math.max(0, 1 - fadeProgress));
-      // Masquer aussi les dots/skip pendant le fade
-      var uiOpacity = String(Math.max(0, 1 - fadeProgress * 3));
+      var fadeProgress = (scrollY - fadeStart) / (spacerH - fadeStart);
+      video.style.opacity    = String(Math.max(0, 1 - fadeProgress));
+      if (gradient) gradient.style.opacity = String(Math.min(1, fadeProgress * 1.4));
+      var uiOpacity = String(Math.max(0, 1 - fadeProgress * 4));
       uiEls.forEach(function (el) { el.style.opacity = uiOpacity; });
     } else {
       video.style.opacity = '1';
+      if (gradient) gradient.style.opacity = '0';
       uiEls.forEach(function (el) { el.style.opacity = ''; });
     }
 
     if (!duration) return;
 
-    // PDF §3 — mapping scroll → targetTime (plafonné à scrollRange)
-    var fraction = Math.min(1, Math.max(0, scrollY / scrollRange));
+    // Mapping sur spacerH complet → pas de dead zone, vidéo joue jusqu'au bout
+    var fraction = Math.min(1, Math.max(0, scrollY / spacerH));
     targetT = fraction * duration;
 
     if (!lerpRaf) lerpRaf = requestAnimationFrame(lerpLoop);
