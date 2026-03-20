@@ -13,8 +13,9 @@
 
   if (!video || !spacer) return;
 
-  var loader = document.getElementById('vi-loader');
-  var uiEls  = dots.concat(skip ? [skip] : []);
+  var loader   = document.getElementById('vi-loader');
+  var gradient = document.getElementById('vi-gradient');
+  var uiEls    = dots.concat(skip ? [skip] : []);
 
   // PDF §6 — masquer le loader dès que la vidéo est prête à jouer
   if (loader) {
@@ -50,12 +51,14 @@
   // Masque complètement la vidéo (display:none retire du stacking context)
   function hideVideo() {
     video.style.display = 'none';
-    if (loader) loader.style.display = 'none';
+    if (loader)    loader.style.display = 'none';
+    if (gradient)  gradient.style.display = 'none';
     uiEls.forEach(function (el) { el.style.display = 'none'; });
   }
 
   function showVideo() {
     video.style.display = '';
+    if (gradient) gradient.style.display = '';
     uiEls.forEach(function (el) { el.style.display = ''; });
   }
 

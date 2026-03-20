@@ -1184,6 +1184,17 @@ html { -webkit-overflow-scrolling: touch; }
   will-change: opacity; /* PDF §6 — GPU acceleration */
 }
 
+/* Gradient de transition vidéo → hero */
+#vi-gradient {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 45vh;
+  background: linear-gradient(to top, #0a0a0a 0%, #0a0a0a 15%, transparent 100%);
+  z-index: 1;
+  pointer-events: none;
+  will-change: opacity;
+}
+
 /* PDF §6 — Loader jusqu'à canplaythrough */
 #vi-loader {
   position: fixed;
