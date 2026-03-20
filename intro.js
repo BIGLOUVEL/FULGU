@@ -65,9 +65,9 @@
 
     var scrollY     = window.scrollY;
     var spacerH     = spacer.offsetHeight;          // 300vh en px
-    var scrollRange = spacerH - window.innerHeight;  // plage de scrub
+    var scrollRange = spacerH - window.innerHeight;  // plage de scrub (200vh)
 
-    // Passé la zone intro → cacher la vidéo complètement
+    // Passé la zone intro → cacher complètement
     if (scrollY >= spacerH) {
       hideVideo();
       return;
@@ -76,16 +76,30 @@
     // Dans la zone intro
     showVideo();
 
-    if (!duration) return; // Métadonnées pas encore chargées
+    // ---- Fade out scroll-driven pendant la remontée du hero ----
+    // fadeStart = quand le hero entre par le bas du viewport (scrollY = 200vh)
+    // À scrollY = 300vh (spacerH) : hero en haut, vidéo opacity 0 → display:none
+    var fadeStart = scrollRange; // = spacerH - innerHeight
+    if (scrollY >= fadeStart) {
+      var fadeProgress = (scrollY - fadeStart) / window.innerHeight;
+      video.style.opacity = String(Math.max(0, 1 - fadeProgress));
+      // Masquer aussi les dots/skip pendant le fade
+      var uiOpacity = String(Math.max(0, 1 - fadeProgress * 3));
+      uiEls.forEach(function (el) { el.style.opacity = uiOpacity; });
+    } else {
+      video.style.opacity = '1';
+      uiEls.forEach(function (el) { el.style.opacity = ''; });
+    }
 
-    // PDF §3 — mapping scroll → targetTime
+    if (!duration) return;
+
+    // PDF §3 — mapping scroll → targetTime (plafonné à scrollRange)
     var fraction = Math.min(1, Math.max(0, scrollY / scrollRange));
     targetT = fraction * duration;
 
-    // Lancer le lerp si pas déjà en cours
     if (!lerpRaf) lerpRaf = requestAnimationFrame(lerpLoop);
 
-    // Dots : 3 tiers égaux
+    // Dots : 3 tiers égaux (cachés pendant le fade)
     var active = fraction < 1 / 3 ? 0 : fraction < 2 / 3 ? 1 : 2;
     dots.forEach(function (d, i) {
       d.classList.toggle('vi-dot--active', i === active);
