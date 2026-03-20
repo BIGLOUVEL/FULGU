@@ -197,16 +197,13 @@ body:hover .cursor { opacity: 1; }
   backdrop-filter: blur(20px);
 }
 .nav__logo {
-  display: flex;
-  align-items: center;
-  transition: opacity 0.2s;
+  font-family: var(--font-title);
+  font-size: 26px;
+  letter-spacing: 0.02em;
+  color: var(--text);
+  transition: color 0.2s;
 }
-.nav__logo:hover { opacity: 0.75; }
-.nav__logo-img {
-  height: 36px;
-  width: auto;
-  display: block;
-}
+.nav__logo:hover { color: var(--accent); }
 .nav__links {
   display: flex;
   align-items: center;
