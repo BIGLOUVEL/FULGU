@@ -15,10 +15,15 @@
   <!-- VIDEO INTRO — PDF §1: fixed video + transparent spacer -->
   <div id="vi-spacer" style="height:300vh;"></div>
 
-  <video id="scrollVideo" muted playsinline preload="auto"
-         style="position:fixed;top:0;left:0;width:100vw;height:100vh;object-fit:cover;z-index:0;">
+  <!-- PDF §2 : pas d'autoplay, pas de controls, source typée -->
+  <video id="scrollVideo" muted playsinline preload="auto">
     <source src="public/VIDEO DE FOU-2.mp4" type="video/mp4">
   </video>
+
+  <!-- PDF §6 : loader jusqu'à canplaythrough -->
+  <div id="vi-loader">
+    <div class="vi-loader__ring"></div>
+  </div>
 
   <!-- Progress dots — fixed, right edge -->
   <div class="vi-dots" aria-hidden="true">

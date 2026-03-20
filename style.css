@@ -1167,21 +1167,35 @@ body:hover .cursor { opacity: 1; }
 }
 
 /* =============================================
-   VIDEO INTRO SEQUENCE — appended, do not edit above
-   Structure : sticky scroll, inline styles sur les vidéos
+   VIDEO INTRO SEQUENCE
+   Conforme PDF "Scroll-Driven Video Animation — Best Practices"
    ============================================= */
 
-/* Loader — visible until canplaythrough */
-.vi-loader {
-  position: absolute;
+/* PDF §7 — iOS momentum scrolling */
+html { -webkit-overflow-scrolling: touch; }
+
+/* PDF §1 + §2 — video fullscreen fixe, CSS (pas inline style) */
+#scrollVideo {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  object-fit: cover;
+  z-index: 0;
+  will-change: opacity; /* PDF §6 — GPU acceleration */
+}
+
+/* PDF §6 — Loader jusqu'à canplaythrough */
+#vi-loader {
+  position: fixed;
   inset: 0;
   background: #000;
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 3;
   transition: opacity 0.4s ease;
 }
-.vi-loader.vi-loader--hidden {
+#vi-loader.vi-loader--hidden {
   opacity: 0;
   pointer-events: none;
 }

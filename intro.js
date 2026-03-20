@@ -13,7 +13,16 @@
 
   if (!video || !spacer) return;
 
-  var uiEls    = dots.concat(skip ? [skip] : []);
+  var loader = document.getElementById('vi-loader');
+  var uiEls  = dots.concat(skip ? [skip] : []);
+
+  // PDF §6 — masquer le loader dès que la vidéo est prête à jouer
+  if (loader) {
+    video.addEventListener('canplaythrough', function () {
+      loader.classList.add('vi-loader--hidden');
+      setTimeout(function () { loader.style.display = 'none'; }, 400);
+    }, { once: true });
+  }
   var duration = 0;
 
   // Lerp : interpolation smooth entre la position scroll et currentTime
@@ -41,6 +50,7 @@
   // Masque complètement la vidéo (display:none retire du stacking context)
   function hideVideo() {
     video.style.display = 'none';
+    if (loader) loader.style.display = 'none';
     uiEls.forEach(function (el) { el.style.display = 'none'; });
   }
 
