@@ -83,11 +83,16 @@
     // fadeStart = quand le hero entre par le bas du viewport (scrollY = scrollRange)
     // fadeEnd   = quand le hero est en haut du viewport (scrollY = spacerH)
     // Les deux sont parfaitement synchronisés → zéro zone noire
-    if (scrollY >= scrollRange) {
-      var fadeProgress = (scrollY - scrollRange) / window.innerHeight; // 0 → 1
-      video.style.opacity = String(Math.max(0, 1 - fadeProgress));
-      if (gradient) gradient.style.opacity = String(Math.min(1, fadeProgress));
-      var uiOpacity = String(Math.max(0, 1 - fadeProgress * 5));
+    // Fade démarre 60vh avant la fin du spacer pour une transition plus douce
+    var fadeStart = scrollRange - window.innerHeight * 0.6;
+    var fadeRange = window.innerHeight * 1.6;
+    if (scrollY >= fadeStart) {
+      var fadeProgress = Math.min(1, (scrollY - fadeStart) / fadeRange);
+      // Courbe ease-in pour un fondu plus naturel
+      var eased = fadeProgress * fadeProgress;
+      video.style.opacity = String(Math.max(0, 1 - eased));
+      if (gradient) gradient.style.opacity = String(Math.min(1, eased));
+      var uiOpacity = String(Math.max(0, 1 - fadeProgress * 4));
       uiEls.forEach(function (el) { el.style.opacity = uiOpacity; });
     } else {
       video.style.opacity = '1';

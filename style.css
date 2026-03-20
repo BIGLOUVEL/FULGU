@@ -1189,8 +1189,8 @@ html { -webkit-overflow-scrolling: touch; }
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(ellipse 80% 60% at 50% 120%, rgba(204,255,0,0.09) 0%, transparent 65%),
-    linear-gradient(to top, #0a0a0a 0%, #0a0a0a 18%, rgba(10,10,10,0.55) 55%, transparent 100%);
+    radial-gradient(ellipse 70% 45% at 50% 100%, rgba(204,255,0,0.10) 0%, transparent 65%),
+    #0a0a0a;
   z-index: 1;
   pointer-events: none;
   will-change: opacity;
